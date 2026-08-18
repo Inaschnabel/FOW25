@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOW25 &middot; Lernstandskontrolle &middot; BBS Walsrode</title>
+<meta name="description" content="Übungsquiz FOW25: Kapitel 1 – Marktorientierte Unternehmenssteuerung">
+<script>
+  (function () {
+    var saved = localStorage.getItem("fow25-theme");
+    var theme = saved || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Hell-/Dunkelmodus umschalten">🌙</button>
+
+  <header class="page-header">
+    <div>
+      <h1>FOW25 &middot; Lernstandskontrolle</h1>
+      <p class="subtitle">Kapitel 1: Marktorientierte Unternehmenssteuerung (Lerngebiet 12.2)</p>
+    </div>
+    <div class="logo-chip">
+      <img src="logo.svg" alt="Logo der BBS Walsrode">
+    </div>
+  </header>
+
+  <main>
+    <!-- INTRO -->
+    <div id="intro-view">
+      <div class="card">
+        <h2>Übungsquiz zu Kapitel 1</h2>
+        <p>Dieses Quiz begleitet Kapitel 1 „Marktorientierte Unternehmenssteuerung“ (Lerngebiet 12.2, Lernsituation 1 – Weber Metallbau GmbH): Begriff Markt, Liberalisierung &amp; Globalisierung, Anpassungsmaßnahmen der Unternehmen sowie marktwirtschaftliche Unternehmensziele (SMART-Formel, ökonomische/ökologische/soziale Ziele).</p>
+        <p>Es enthält <strong>30 Fragen</strong> in <strong>zufälliger Reihenfolge</strong> – so kannst du beliebig oft üben, ohne dir nur die Reihenfolge zu merken.</p>
+        <ul>
+          <li><span class="badge kurz" style="display:inline-block;margin-right:0.3rem;">kurz</span> Multiple-Choice-Fragen – eine Antwort ankreuzen</li>
+          <li><span class="badge lang" style="display:inline-block;margin-right:0.3rem;">lang</span> Freitextfragen – Antwort in eigenen Worten formulieren</li>
+        </ul>
+        <p>Die <strong>ausführlichen Musterlösungen</strong> zu allen Fragen siehst du erst ganz am Ende, nachdem du das komplette Quiz abgeschickt hast.</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="start-btn" type="button">Quiz starten</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div id="quiz-view" class="hidden">
+      <div class="progress-wrap">
+        <span id="progress-label">0 von 30 beantwortet</span>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+      <div id="questions-wrap"></div>
+      <div class="card accent-green">
+        <p>Wenn du alle Fragen bearbeitet hast, kannst du das Quiz auswerten. Nicht beantwortete Fragen zählen als falsch bzw. offen.</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="submit-btn" type="button">Quiz auswerten</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result-view" class="hidden">
+      <div class="card accent-green" id="score-card"></div>
+      <div id="review-wrap"></div>
+      <div class="card">
+        <p>Du kannst das Quiz beliebig oft wiederholen – die Fragen und Antwortoptionen werden dabei jedes Mal neu gemischt.</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="retry-btn" type="button">Nochmal üben</button>
+          <button class="btn btn-secondary" id="retry-btn-2" type="button">Zurück zur Startseite</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <div class="inner">
+      <span>Ina Schnabel</span>
+      <span>FOW25 &middot; BBS Walsrode</span>
+    </div>
+  </footer>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
