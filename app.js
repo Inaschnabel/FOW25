@@ -1,6 +1,9 @@
 (function () {
   "use strict";
 
+  var CHAPTER_ID = window.CHAPTER_ID || "kapitel1";
+  var SOLUTIONS_FROM_ATTEMPT = 3;
+
   // ---------- Theme ----------
   var toggleBtn = document.getElementById("themeToggle");
   function currentTheme() {
@@ -21,6 +24,19 @@
     updateIcon();
   });
   updateIcon();
+
+  // ---------- Versuchszähler (pro Kapitel, im Browser gespeichert) ----------
+  function attemptsKey() {
+    return "fow25-attempts-" + CHAPTER_ID;
+  }
+  function getAttempts() {
+    return parseInt(localStorage.getItem(attemptsKey()), 10) || 0;
+  }
+  function registerAttempt() {
+    var n = getAttempts() + 1;
+    localStorage.setItem(attemptsKey(), String(n));
+    return n;
+  }
 
   // ---------- State ----------
   var order = [];
@@ -196,7 +212,8 @@
       totalScore += awarded;
     });
 
-    renderResults(totalScore, maxScore, results);
+    var attemptNr = registerAttempt();
+    renderResults(totalScore, maxScore, results, attemptNr);
     quizView.classList.add("hidden");
     resultView.classList.remove("hidden");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -208,16 +225,27 @@
     return div.innerHTML;
   }
 
-  function renderResults(totalScore, maxScore, results) {
+  function renderResults(totalScore, maxScore, results, attemptNr) {
+    var showSolutions = attemptNr >= SOLUTIONS_FROM_ATTEMPT;
     var scoreCard = document.getElementById("score-card");
     var pct = maxScore ? Math.round((totalScore / maxScore) * 100) : 0;
+    var attemptNote;
+    if (showSolutions) {
+      attemptNote =
+        '<p style="margin-top:0.6rem;">Bei den Freitextfragen wurde die Punktzahl automatisch anhand erwarteter Stichwörter grob geschätzt – ' +
+        'die ausführlichen Musterlösungen unten zeigen dir, worauf es inhaltlich ankommt. Vergleiche deine Antworten selbst noch einmal genau damit.</p>';
+    } else {
+      attemptNote =
+        '<p style="margin-top:0.6rem;">Das war Versuch ' + attemptNr + ' von ' + SOLUTIONS_FROM_ATTEMPT +
+        '. Die ausführlichen Musterlösungen werden erst ab dem ' + SOLUTIONS_FROM_ATTEMPT +
+        '. Versuch eingeblendet – übe erst noch einmal aus dem Kopf, bevor du sie dir ansiehst.</p>';
+    }
     scoreCard.innerHTML =
       '<h2>Dein Ergebnis</h2>' +
       '<div class="score-hero"><span class="score-num">' +
       (Math.round(totalScore * 10) / 10) +
       '</span><span class="score-max">/ ' + maxScore + ' Punkte (' + pct + ' %)</span></div>' +
-      '<p style="margin-top:0.6rem;">Bei den Freitextfragen wurde die Punktzahl automatisch anhand erwarteter Stichwörter grob geschätzt – ' +
-      'die ausführlichen Musterlösungen unten zeigen dir, worauf es inhaltlich ankommt. Vergleiche deine Antworten selbst noch einmal genau damit.</p>';
+      attemptNote;
 
     reviewWrap.innerHTML = "";
     results.forEach(function (r, idx) {
@@ -236,7 +264,11 @@
         html += '<div class="review-your-answer">Deine Antwort: ' + (r.yourAnswer ? escapeHtml(r.yourAnswer) : "<em>keine Antwort eingegeben</em>") + "</div>";
       }
 
-      html += '<div class="review-solution"><strong>Musterlösung:</strong><br>' + escapeHtml(q.solution) + "</div>";
+      if (showSolutions) {
+        html += '<div class="review-solution"><strong>Musterlösung:</strong><br>' + escapeHtml(q.solution) + "</div>";
+      } else {
+        html += '<div class="review-solution review-locked">🔒 Musterlösung ab dem ' + SOLUTIONS_FROM_ATTEMPT + ". Versuch sichtbar.</div>";
+      }
 
       item.innerHTML = html;
       reviewWrap.appendChild(item);
@@ -247,8 +279,6 @@
   document.getElementById("submit-btn").addEventListener("click", submitQuiz);
   document.getElementById("retry-btn").addEventListener("click", startQuiz);
   document.getElementById("retry-btn-2").addEventListener("click", function () {
-    resultView.classList.add("hidden");
-    introView.classList.remove("hidden");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.location.href = "index.html";
   });
 })();
